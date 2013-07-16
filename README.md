@@ -3,11 +3,15 @@ wallpaperfm
 
 Python script for generating wallpapers from last.fm data.
 
+Copyright (C) 2013  Alex Phillips (Email: alecks.phillips@gmail.com)
 
 ./wallpaper.py will display the instructions.
 
 Please try to use the local option '-l' when possible to be kind to last.fm's servers.
  
+GPL
+---
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -43,7 +47,8 @@ v. 16 Jul 2013
 - Lots of formatting to try to conform to the Python Style Guide
 
 
-
+Acknowledgements
+----------------
 Thanks to [Koant] [1] for his [original script] [2] and to
 [HelgeBS] [3] for the addition of the background color and image type [options] [4],
 and to [Roignac] [5] for the artist image and rounded corners [options] [6].
@@ -54,5 +59,3 @@ and to [Roignac] [5] for the artist image and rounded corners [options] [6].
   [4]: https://content.wuala.com/contents/nanyouco/Images/last.fm/wallpaperfm.py?key=4DCLgHGLNI32 "options"
   [5]: http://www.lastfm.fr/user/Roignac    "Roignac"
   [6]: http://bazaar.launchpad.net/~roignac/+junk/wallpaperfm/files "options"
-  
- Email: alecks.phillips@gmail.com
