@@ -375,8 +375,8 @@ def getAlbumCovers(Username='Koant',Past='overall',cache='wp_cache',
         sys.exit()
 
     
-    filelist=[artist.getElementsByTagName('image')[3].firstChild.nodeValue
-    for artist in xmldoc.getElementsByTagName(tagname)]  
+    filelist=[item.getElementsByTagName('image')[3].firstChild.nodeValue
+    for item in xmldoc.getElementsByTagName(tagname)]  
 
     # Exclude covers from the ExcludedList
     filelist=[item for item in filelist if not item in ExcludedList]
