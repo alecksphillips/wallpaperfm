@@ -31,12 +31,14 @@ Changes to original script
   - Use artist images instead of album covers (--Artist)
   - Rounding of image corners (--Radius)
   - Adapted for Python 3
+  - Updated for last.fm api 2.0
 
 Requirements:
 ---------------
 * Python >3.0
 * Python Imaging Library (Not available for Python 3; 'Pillow' is a drop-in replacement)
 * a last.fm account and an active internet connection
+* last.fm api account (available for free [here] [7].)
 
 v. 16 Jul 2013
 ---------------
@@ -45,6 +47,11 @@ v. 16 Jul 2013
   a float. Changed all instances of '/' used for integer division to '//',
   the floor division operator to better preserve functionality.
 - Lots of formatting to try to conform to the Python Style Guide
+
+v. 19 Jul 2013
+--------------
+- Updated for last.fm api 2.0 (user can use their own api account)
+- Fixed artist option
 
 
 Acknowledgements
@@ -59,3 +66,4 @@ and to [Roignac] [5] for the artist image and rounded corners [options] [6].
   [4]: https://content.wuala.com/contents/nanyouco/Images/last.fm/wallpaperfm.py?key=4DCLgHGLNI32 "options"
   [5]: http://www.lastfm.fr/user/Roignac    "Roignac"
   [6]: http://bazaar.launchpad.net/~roignac/+junk/wallpaperfm/files "options"
+  [7]: http://www.last.fm/api/account/create "here"
