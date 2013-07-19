@@ -32,7 +32,8 @@
 #    and Vadim Rutkovsky (roignac@gmail.com)
 #    http://bazaar.launchpad.net/~roignac/+junk/wallpaperfm/files
 #
-#Adapted for Python 3, consolidated into one script and general cleanup
+#Adapted for Python 3 and last.fm api 2.0, consolidated into one
+#script and general cleanup
 #    by aleckphillips (http://www.last.fm/user/alecksphillips)
 #
 #Changes to original script:
@@ -53,12 +54,21 @@
 #  - Integer division no longer truncates as of Python 3.0, instead returning
 #    a float. Changed all instances of '/' used for integer division to '//',
 #    the floor division operator to better preserve functionality.
+#
+# v. 19 Jul 2013
+#  - Changed getAlbumCovers to match last.fm api 2.0 including use of api key
+#    User is encouraged to user their own key if they wish which can be
+#    obtained with an api account (http://www.last.fm/api/account/create).
 
 __author__ = 'Alex Phillips (alecks.phillips@gmail.com)'
-__version__ = '$ 16 Jul 2013 $'
-__date__ = '$ Date: 2013/07/16 $'
+__version__ = '$ 19 Jul 2013 $'
+__date__ = '$ Date: 2013/07/19 $'
 __copyright__ = 'Copyright (c) 2013 Alex Phillips'
 __license__ = 'GPL'
+
+
+#Key for last.fm api - change to your own personal key
+api_key='8cf8b8f0778a606621666c2152df79db'
 
 
 from urllib.request import urlopen
@@ -324,13 +334,13 @@ def getAlbumCovers(Username='Koant',Past='overall',cache='wp_cache',
         tpe=''
     
     if Artist=="yes":
-        url=('http://ws.audioscrobbler.com/1.0/user/'+Username+
-             '/topartists.xml?limit='+str(Limit)+tpe)
-        tagname='image'
+        url=('http://ws.audioscrobbler.com/2.0/?method=user.getTopArtists&user='+Username+
+         '&api_key='+api_key+'&limit='+str(Limit)+tpe)
+        tagname='artist'
     else:
-        url=('http://ws.audioscrobbler.com/1.0/user/'+Username+
-             '/topalbums.xml?limit='+str(Limit)+tpe)
-        tagname='medium'
+        url=('http://ws.audioscrobbler.com/2.0/?method=user.getTopAlbums&user='+Username+
+         '&api_key='+api_key+'&limit='+str(Limit)+tpe)
+        tagname='album'
 
     # make cache if doesn't exist
     if not os.path.exists(cache):
@@ -356,6 +366,7 @@ def getAlbumCovers(Username='Koant',Past='overall',cache='wp_cache',
         data=open(cache+os.sep+'charts_'+Username+'.xml','rb')
         xmldoc=minidom.parse(data)
         data.close()
+
     except Exception as err:
         print('#'*20)
         print("Error while parsing your profile. Your username might be "
@@ -363,10 +374,9 @@ def getAlbumCovers(Username='Koant',Past='overall',cache='wp_cache',
         print('#'*20)        
         sys.exit()
 
-    filelist=[imfile.firstChild.data for imfile in 
-              xmldoc.getElementsByTagName('large')]
-
-
+    
+    filelist=[artist.getElementsByTagName('image')[3].firstChild.nodeValue
+    for artist in xmldoc.getElementsByTagName(tagname)]  
 
     # Exclude covers from the ExcludedList
     filelist=[item for item in filelist if not item in ExcludedList]
