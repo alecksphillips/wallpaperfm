@@ -3,7 +3,7 @@ wallpaperfm
 
 Python script for generating wallpapers from last.fm data.
 
-Copyright (C) 2013  Alex Phillips (Email: alecks.phillips@gmail.com)
+Copyright (C) 2014  Alex Phillips (Email: alecks.phillips@gmail.com)
 
 ./wallpaper.py will display the instructions.
 
@@ -52,6 +52,11 @@ v. 19 Jul 2013
 --------------
 - Updated for last.fm api 2.0 (user can use their own api account)
 - Fixed artist option
+
+
+v. 08 Feb 2014
+--------------
+- Fixed gradient on albums in Collage not being applied on left and right borders.
 
 
 Acknowledgements
