@@ -2,7 +2,7 @@
 #
 # Wallpaperfm.py is a python script that generates desktop wallpapers from your
 # last.fm music profile.
-# Copyright (C) 2013  Alex Phillips
+# Copyright (C) 2014  Alex Phillips
 #
 
 #########################
@@ -59,6 +59,10 @@
 #  - Changed getAlbumCovers to match last.fm api 2.0 including use of api key
 #    User is encouraged to user their own key if they wish which can be
 #    obtained with an api account (http://www.last.fm/api/account/create).
+#
+# v. 08 Feb 2014
+#  - Edited makeCollageMask to remove hard edges on left and right borders of
+#    albums.
 
 __author__ = 'Alex Phillips (alecks.phillips@gmail.com)'
 __version__ = '$ 19 Jul 2013 $'
@@ -626,10 +630,15 @@ def makeCollageMask(size,transparency,gradientsize):
     c=c/4.0 # 4=normalizing constant from convolution
     s2=1/(l*1.4142)
     for i in range(sizex):
+        
+        #edited to remove hard edges on left and right borders of each album
+        foo1=(erfc(s2*(l-i))-erfc(s2*(sizey-l-i))) #saving computation
+        
         for j in range(sizey):
             
-            foo=(erfc(s2*(l-j))-erfc(s2*(sizex-l-j))) #saving computation
-            v=c*foo*foo
+            foo2=(erfc(s2*(l-j))-erfc(s2*(sizex-l-j))) #saving computation
+            
+            v=c*foo1*foo2
                            
             mask.putpixel((i,j),int(v))
         
