@@ -17,7 +17,7 @@ class TestSequenceFunctions(unittest.TestCase):
 
     def setUp(self):
         self.username = "RJ"
-        self.cmd = "./wallpaperfm.py -u " + self.username + " "
+        self.cmd = "./wallpaperfm.py --Local -u " + self.username + " "
 
     def test_help(self):
         """ Test tiled albums """
