@@ -4,5 +4,7 @@ python:
 - '2.7'
 - '3.2'
 - '3.3'
-install: pip install -r requirements.txt
-script: ./test_wallpaperfm.py
+install:
+- pip install -r requirements.txt
+- pip install coveralls
+script: coverage run --source wallpaperfm.py ./test_wallpaperfm.py

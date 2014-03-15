@@ -4,7 +4,10 @@ Integration tests for wallpaperfm.py
 """
 import os
 import unittest
-# import wallpaperfm  # Don't import, test via command line
+
+# Run via command line, but need to import to calculate coverage
+import wallpaperfm
+
 
 class TestSequenceFunctions(unittest.TestCase):
 
@@ -58,22 +61,6 @@ class TestSequenceFunctions(unittest.TestCase):
 
         # Assert
         self.assertTrue(os.path.isfile(outfile + ".png"))
-
-    def test_collage_albums(self):
-        """ Test collage albums """
-        # Arrange
-        outfile = "test_collage"
-        cmd = self.cmd + " -m collage -f " + outfile
-        self.remove_file(outfile + ".png")
-        self.assertFalse(os.path.isfile(outfile + ".png"))
-
-        # Act
-        print(cmd)
-        os.system(cmd)
-
-        # Assert
-        self.assertTrue(os.path.isfile(outfile + ".png"))
-#         self.remove_file(outfile + "png")
 
 if __name__ == '__main__':
     unittest.main()
