@@ -1,13 +1,15 @@
 wallpaperfm
 ===========
 
-Python script for generating wallpapers from last.fm data.
+[![Build Status](https://travis-ci.org/hugovk/wallpaperfm.png?branch=master)](https://travis-ci.org/hugovk/wallpaperfm) [![Coverage Status](https://coveralls.io/repos/hugovk/wallpaperfm/badge.png)](https://coveralls.io/r/hugovk/wallpaperfm)
+
+Python script for generating wallpapers from Last.fm data.
 
 Copyright (C) 2014  Alex Phillips (Email: alecks.phillips@gmail.com)
 
 ./wallpaper.py will display the instructions.
 
-Please try to use the local option '-l' when possible to be kind to last.fm's servers.
+Please try to use the local option '-l' when possible to be kind to Last.fm's servers.
  
 GPL
 ---
@@ -31,14 +33,19 @@ Changes to original script
   - Use artist images instead of album covers (--Artist)
   - Rounding of image corners (--Radius)
   - Adapted for Python 3
-  - Updated for last.fm api 2.0
+  - Updated for Last.fm API 2.0
 
 Requirements:
 ---------------
-* Python >3.0
-* Python Imaging Library (Not available for Python 3; 'Pillow' is a drop-in replacement)
-* a last.fm account and an active internet connection
-* last.fm api account (available for free [here] [7].)
+* Tested on Python 2.6, 2.7, 3.2 or 3.3
+* Python Imaging Library (not available for Python 3; 'Pillow' is a drop-in replacement)
+* A Last.fm account and an active internet connection
+* Last.fm API account (available for free [here] [7])
+
+Install:
+---------------
+`pip install -r requirements.txt`
+
 
 v. 16 Jul 2013
 ---------------
@@ -50,7 +57,7 @@ v. 16 Jul 2013
 
 v. 19 Jul 2013
 --------------
-- Updated for last.fm api 2.0 (user can use their own api account)
+- Updated for Last.fm API 2.0 (user can use their own API account)
 - Fixed artist option
 
 
