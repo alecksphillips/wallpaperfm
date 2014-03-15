@@ -13,8 +13,8 @@ class TestSequenceFunctions(unittest.TestCase):
             os.remove(file)
 
     def setUp(self):
-        self.username = "hvk"  # TODO enter a test username
-        self.cmd = "./wallpaperfm.py -l -u " + self.username + " "
+        self.username = "RJ"
+        self.cmd = "./wallpaperfm.py -u " + self.username + " "
 
     def test_help(self):
         """ Test tiled albums """

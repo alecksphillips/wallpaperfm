@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #
 # Wallpaperfm.py is a python script that generates desktop wallpapers from your
 # last.fm music profile.
