@@ -355,22 +355,22 @@ def getAlbumCovers(Username='Koant',Past='overall',cache='wp_cache',
         os.mkdir(cache)
 
     # Make a local copy of the charts
-    if Local=='no':
+    local_copy = cache+os.sep+'charts_'+Username+'.xml'
+    if Local=='no' or (Local=='yes' and not os.path.isfile(local_copy)):
         try:
             print("Downloading from ",url)
-            download(url,cache+os.sep+'charts_'+Username+'.xml')
+            download(url, local_copy)
         except Exception as err:
             print("#"*20)
             print("I couldn't download the profile or make a local copy of it.")
             print("#"*20)
     else:
-        print("Reading from local copy:  ",cache+os.sep+'charts_'+Username+
-              '.xml')
+        print("Reading from local copy:  ",local_copy)
 
     # Parse image filenames
     print("Parsing...")
     try:
-        data=open(cache+os.sep+'charts_'+Username+'.xml','rb')
+        data=open(local_copy,'rb')
         xmldoc=minidom.parse(data)
         data.close()
 
@@ -548,8 +548,8 @@ def makeGlassMask(ImageSize,Offset=50,EndPoint=75):
     sizex,sizey=ImageSize
 
     stop=min((EndPoint*sizey)//100,sizey)
-    E=EndPoint*sizey//100
-    O=255*Offset//100
+    #E=EndPoint*sizey//100
+    #O=255*Offset//100
     for i in range(0,stop):
         color=(255*Offset//100*-100*i)//(EndPoint*sizey)+255*Offset//100 #linear gradient
         #color=((i-E)*(i-E)*O)//(E*E) # quadratic gradient
