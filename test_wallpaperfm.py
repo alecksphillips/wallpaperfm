@@ -5,11 +5,12 @@ Integration tests for wallpaperfm.py
 import os
 import unittest
 
+import imp
 try:
-    import coverage
-    coverable = True
+    imp.find_module("coverage")
+    COVERAGE_CMD = "coverage run --append --source wallpaperfm.py "
 except ImportError:
-    coverable = False
+    COVERAGE_CMD = ""
 
 
 class TestSequenceFunctions(unittest.TestCase):
@@ -20,16 +21,14 @@ class TestSequenceFunctions(unittest.TestCase):
 
     def setUp(self):
         self.username = "RJ"
-        self.cmd = "./wallpaperfm.py --Local -u " + self.username + " "
-        if coverable:
-            self.cmd = "coverage run -a " + self.cmd
+        self.cmd = (
+            COVERAGE_CMD +
+            "./wallpaperfm.py --Local -u " + self.username + " ")
 
     def test_help(self):
-        """ Test tiled albums """
+        """ Test usage with no options """
         # Arrange
-        cmd = "./wallpaperfm.py"
-        if coverable:
-            cmd = "coverage run -a " + cmd
+        cmd = COVERAGE_CMD + "./wallpaperfm.py"
 
         # Act
         print(cmd)
@@ -55,7 +54,7 @@ class TestSequenceFunctions(unittest.TestCase):
         self.assertTrue(os.path.isfile(outfile + ".png"))
 
     def test_glass_albums(self):
-        """ Test tiled albums """
+        """ Test glassy albums """
         # Arrange
         outfile = "test_glass"
         cmd = self.cmd + " -m glass -f " + outfile
@@ -70,7 +69,7 @@ class TestSequenceFunctions(unittest.TestCase):
         self.assertTrue(os.path.isfile(outfile + ".png"))
 
 if __name__ == '__main__':
-    if coverable:
+    if len(COVERAGE_CMD):
         os.system("coverage erase")
     unittest.main()
 
