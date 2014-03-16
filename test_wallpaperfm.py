@@ -28,7 +28,7 @@ class TestSequenceFunctions(unittest.TestCase):
     def test_help(self):
         """ Test usage with no options """
         # Arrange
-        cmd = COVERAGE_CMD + "./wallpaperfm.py"
+        cmd = COVERAGE_CMD + "./wallpaperfm.py --help"
 
         # Act
         print(cmd)
@@ -38,11 +38,9 @@ class TestSequenceFunctions(unittest.TestCase):
         # Should run with no exceptions
         # (Could check no image files exist)
 
-    def test_tiled_albums(self):
-        """ Test tiled albums """
+    def helper_run_and_assert_file(self, outfile, args):
         # Arrange
-        outfile = "test_tiled"
-        cmd = self.cmd + " -m tile -f " + outfile
+        cmd = self.cmd + " " + args + " -f " + outfile
         self.remove_file(outfile + ".png")
         self.assertFalse(os.path.isfile(outfile + ".png"))
 
@@ -52,36 +50,35 @@ class TestSequenceFunctions(unittest.TestCase):
 
         # Assert
         self.assertTrue(os.path.isfile(outfile + ".png"))
+
+    def test_tiled_albums(self):
+        """ Test tiled albums """
+        # Arrange
+        outfile = "out_tiled"
+        args = " -m tile  --AlbumSize 120 --Interspace 4 "
+
+        # Act/Assert
+        self.helper_run_and_assert_file(outfile, args)
 
     def test_glass_albums(self):
         """ Test glassy albums """
         # Arrange
-        outfile = "test_glass"
-        cmd = self.cmd + " -m glass -f " + outfile
-        self.remove_file(outfile + ".png")
-        self.assertFalse(os.path.isfile(outfile + ".png"))
+        outfile = "out_glass"
+        args = " -m glass --AlbumNumber 8 --EndPoint 80 --Offset 30 "
 
-        # Act
-        print(cmd)
-        os.system(cmd)
-
-        # Assert
-        self.assertTrue(os.path.isfile(outfile + ".png"))
+        # Act/Assert
+        self.helper_run_and_assert_file(outfile, args)
 
     def test_collage_albums(self):
         """ Test collage albums """
         # Arrange
-        outfile = "test_collage"
-        cmd = self.cmd + " -m collage -f " + outfile
-        self.remove_file(outfile + ".png")
-        self.assertFalse(os.path.isfile(outfile + ".png"))
+        outfile = "out_collage"
+        args = (
+            " -m collage --AlbumSize 200 --AlbumOpacity 85 "
+            " --AlbumNumber 60 --GradientSize 20 --Passes 3 ")
 
-        # Act
-        print(cmd)
-        os.system(cmd)
-
-        # Assert
-        self.assertTrue(os.path.isfile(outfile + ".png"))
+        # Act/Assert
+        self.helper_run_and_assert_file(outfile, args)
 
 if __name__ == '__main__':
     if len(COVERAGE_CMD):
