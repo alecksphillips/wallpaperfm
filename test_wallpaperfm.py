@@ -5,8 +5,11 @@ Integration tests for wallpaperfm.py
 import os
 import unittest
 
-# Run via command line, but need to import to calculate coverage
-import wallpaperfm
+try:
+    import coverage
+    coverable = True
+except ImportError:
+    coverable = False
 
 
 class TestSequenceFunctions(unittest.TestCase):
@@ -18,11 +21,15 @@ class TestSequenceFunctions(unittest.TestCase):
     def setUp(self):
         self.username = "RJ"
         self.cmd = "./wallpaperfm.py --Local -u " + self.username + " "
+        if coverable:
+            self.cmd = "coverage run -a " + self.cmd
 
     def test_help(self):
         """ Test tiled albums """
         # Arrange
         cmd = "./wallpaperfm.py"
+        if coverable:
+            cmd = "coverage run -a " + cmd
 
         # Act
         print(cmd)
@@ -63,6 +70,8 @@ class TestSequenceFunctions(unittest.TestCase):
         self.assertTrue(os.path.isfile(outfile + ".png"))
 
 if __name__ == '__main__':
+    if coverable:
+        os.system("coverage erase")
     unittest.main()
 
 # End of file

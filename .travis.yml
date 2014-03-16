@@ -7,6 +7,8 @@ python:
 install:
 - pip install -r requirements.txt
 - pip install coveralls
-script: coverage run --source wallpaperfm.py ./test_wallpaperfm.py
+script:
+- coverage erase
+- ./test_wallpaperfm.py
 after_success:
   coveralls
