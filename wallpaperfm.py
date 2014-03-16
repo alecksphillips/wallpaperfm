@@ -660,7 +660,8 @@ def Collage(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),
     imagex,imagey=ImageSize
     canvasx,canvasy=CanvasSize
 
-    background=Image.new('RGB',(imagex,imagey),0) # background
+    colorbg=getBG(ImageSize,ImageType,BgColor)
+    background=Image.new(colorbg.mode,(imagex,imagey),0) # background
     mask=makeCollageMask((AlbumSize,AlbumSize),AlbumOpacity,GradientSize)
     print("Computing the collage...")
     for p in range(0,Passes):
@@ -680,8 +681,7 @@ def Collage(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),
 
     # darken the result
     if FinalOpacity<100:
-        background=Image.blend(getBG(ImageSize,ImageType,BgColor), background,
-                               FinalOpacity/100.0)
+        background=Image.blend(colorbg,background,FinalOpacity/100.0)
 
     return background
 
