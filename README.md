@@ -1,7 +1,7 @@
 wallpaperfm
 ===========
 
-[![Build Status](https://travis-ci.org/hugovk/wallpaperfm.png?branch=master)](https://travis-ci.org/hugovk/wallpaperfm) [![Coverage Status](https://coveralls.io/repos/hugovk/wallpaperfm/badge.png)](https://coveralls.io/r/hugovk/wallpaperfm)
+[![Build Status](https://travis-ci.org/alecksphillips/wallpaperfm.png?branch=master)](https://travis-ci.org/phillips/wallpaperfm) [![Coverage Status](https://coveralls.io/repos/alecksphillips/wallpaperfm/badge.png)](https://coveralls.io/r/alecksphillips/wallpaperfm)
 
 Python script for generating wallpapers from Last.fm data.
 
