@@ -46,6 +46,10 @@ Install:
 ---------------
 `pip install -r requirements.txt`
 
+Album of Examples:
+---------------
+[Imgur] [8] - each captioned with the options required to generate that example.
+
 
 v. 16 Jul 2013
 ---------------
@@ -79,3 +83,4 @@ and to [Roignac] [5] for the artist image and rounded corners [options] [6].
   [5]: http://www.lastfm.fr/user/Roignac    "Roignac"
   [6]: http://bazaar.launchpad.net/~roignac/+junk/wallpaperfm/files "options"
   [7]: http://www.last.fm/api/account/create "here"
+  [8]: http://imgur.com/a/Utr4W "Imgur"
