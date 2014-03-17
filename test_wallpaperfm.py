@@ -134,7 +134,7 @@ class TestSequenceFunctions(unittest.TestCase):
         args = (
             " -m glass --AlbumNumber 8 --EndPoint 80 --Offset 30 "
             " --ImageSize 1920x1080 --CanvasSize 1900x1900 --Past 12month "
-            " -x u'http://images.amazon.com/images/P/B00001ZTYQ.01._SCMZZZZZ "
+            " -x http://images.amazon.com/images/P/B00001ZTYQ.01._SCMZZZZZ "
             )
 
         # Act/Assert
