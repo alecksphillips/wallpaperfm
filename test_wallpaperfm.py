@@ -151,6 +151,15 @@ class TestSequenceFunctions(unittest.TestCase):
         # Act/Assert
         self.helper_run_and_assert_file(args, outfile)
 
+    def test_tiled_artists(self):
+        """ Test tiled artists """
+        # Arrange
+        outfile = "out_tiled_artist"
+        args = " -m tile --Artist"
+
+        # Act/Assert
+        self.helper_run_and_assert_file(args, outfile)
+
 
 if __name__ == '__main__':
     if len(COVERAGE_CMD):
