@@ -53,5 +53,7 @@ coverage.xml
 docs/_build/
 
 *.png
+*.jpg
 wpcache/
+my_cache/
 todo.txt
