@@ -355,7 +355,7 @@ def getAlbumCovers(Username='Koant',Past='overall',cache='wp_cache',
         os.mkdir(cache)
 
     # Make a local copy of the charts
-    local_copy = cache+os.sep+'charts_'+Username+'.xml'
+    local_copy = cache+os.sep+tagname+'_charts_'+Username+'.xml'
     if Local=='no' or (Local=='yes' and not os.path.isfile(local_copy)):
         try:
             print("Downloading from ",url)
