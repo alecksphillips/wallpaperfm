@@ -271,7 +271,7 @@ def getParameters():
         elif option in ('-a','--AlbumSize'): # a: album size (Collage, Tile, Photo)
             Collage['AlbumSize']=int(value)
             Tile['AlbumSize']=int(value)
-	    Photo['AlbumSize']=int(value)
+        Photo['AlbumSize']=int(value)
 
         elif option in ('-o','--AlbumOpacity'):    # o: album opacity (Collage)
             Collage['AlbumOpacity']=int(value)
@@ -285,7 +285,7 @@ def getParameters():
         elif option in ('-n','--AlbumNumber'): # n: number of albums (Glass, Collage, Photo)
             Glass['AlbumNumber']=int(value)
             Collage['AlbumNumber']=int(value)
-	    Photo['AlbumNumber']=int(value)
+            Photo['AlbumNumber']=int(value)
 
         elif option in ('-s','--Interspace'):  # s: interspace (Tile)
             Tile['Interspace']=int(value)
@@ -691,7 +691,7 @@ def Collage(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),
 
                 #Round corners
                 if Radius != 0:
-                    tmpfile = round_image(tmpfile,Radius,BgColor)	
+                    tmpfile = round_image(tmpfile,Radius,BgColor)    
 
                 background.paste(tmpfile,(posx+(imagex-canvasx)//2,
                                           posy+(imagey-canvasy)//2), mask)
@@ -734,11 +734,11 @@ def Photo(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=250,Alb
         if Radius != 0:
             tmpfile = round_image(tmpfile,Radius,BgColor)
 
-	#Random rotation up to 45 degrees left or right
-	angle = int(random.gauss(0,15))
-	
-	tmpfile = tmpfile.rotate(angle,resample=Image.BICUBIC,expand=1)
-	
+    #Random rotation up to 45 degrees left or right
+    angle = int(random.gauss(0,15))
+    
+    tmpfile = tmpfile.rotate(angle,resample=Image.BICUBIC,expand=1)
+    
         background.paste(tmpfile,(posx+offsetx,posy+offsety),tmpfile)
 
     # darken the result
