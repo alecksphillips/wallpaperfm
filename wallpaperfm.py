@@ -88,6 +88,8 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageChops
 
+import math 
+
 def usage():
     print("Quick examples")
     print("--------------")
@@ -99,6 +101,8 @@ def usage():
           " effect.\n")
     print("./wallpaperfm.py -m collage -u your_lastfm_username")
     print("    will generate a random collage of your favorite albums.\n")
+    print("./wallpaperfm.py -m photo -u your_lastfm_username")
+    print("    will generate a random scattering of your favorite albums.\n")
     print("--------------")
 
     print("\nGlobal switches:")
@@ -137,13 +141,16 @@ def usage():
     print("-r, --Offset: [40] starting value of opacity for the shadow.")
 
     print("\nSpecific switches for the 'collage' mode (-m collage):")
-    print("-a, --AlbumSize: [250] size of the albums, in pixel.")
+    print("-a, --AlbumSize: [300] size of the albums, in pixel.")
     print("-o, --AlbumOpacity: [90] maximum opacity of each album, from 0 to "
                 "100.")
     print("-n, --AlbumNumber: [50] number of albums to show.")
     print("-g, --GradientSize: [15] portion of the album in the gradient, "
                 "from 0 to 100")
     print("-p, --Passes: [4] number of iterations of the algorithms.")
+    print("\nSpecific switches for the 'photo' mode (-m photo):")
+    print("-a, --AlbumSize: [250] size of the albums, in pixel.")
+    print("-n, --AlbumNumber: [20] number of albums to show.")
     sys.exit()
 
 def getSize(s):
@@ -195,6 +202,11 @@ def getParameters():
     Glass['Offset']=40
     Glass['EndPoint']=75
 
+    # Photo
+    Photo=dict()
+    Photo['AlbumNumber']=10
+    Photo['AlbumSize']=130
+
     try:
         optlist, args=getopt(sys.argv[1:], 'hu:t:n:c:f:a:o:g:O:i:m:p:s:e:d:r:x:lAT:C:R:',
                              ["help", "Mode=", "Username=", "Past=",
@@ -214,7 +226,7 @@ def getParameters():
     for option, value in optlist:
         if option in ('-h','--help'):
             usage()
-        elif option in ('-m','--Mode'):     # m: mode; Tile, Glass or Collage
+        elif option in ('-m','--Mode'):     # m: mode; Tile, Glass, Collage, Photo
             mode=value.lower()
 
         elif option in('-e','--Cache'):     # e: cache
@@ -256,9 +268,10 @@ def getParameters():
         elif option in ('-R','--Radius'):    # R: images have rounded corners
             Common['Radius']=int(value)
 
-        elif option in ('-a','--AlbumSize'): # a: album size (Collage,Tile)
+        elif option in ('-a','--AlbumSize'): # a: album size (Collage, Tile, Photo)
             Collage['AlbumSize']=int(value)
             Tile['AlbumSize']=int(value)
+	    Photo['AlbumSize']=int(value)
 
         elif option in ('-o','--AlbumOpacity'):    # o: album opacity (Collage)
             Collage['AlbumOpacity']=int(value)
@@ -269,9 +282,10 @@ def getParameters():
         elif option in ('-p','--Passes'):    # p: number of passes (Collage)
             Collage['Passes']=int(value)
 
-        elif option in ('-n','--AlbumNumber'): # n: number of albums (Glass, Collage)
+        elif option in ('-n','--AlbumNumber'): # n: number of albums (Glass, Collage, Photo)
             Glass['AlbumNumber']=int(value)
             Collage['AlbumNumber']=int(value)
+	    Photo['AlbumNumber']=int(value)
 
         elif option in ('-s','--Interspace'):  # s: interspace (Tile)
             Tile['Interspace']=int(value)
@@ -296,9 +310,10 @@ def getParameters():
         Collage[k]=v
         Tile[k]=v
         Glass[k]=v
+        Photo[k]=v
 
     return {'Filename':Filename, 'Mode':mode, 'Profile':Profile, 'Tile':Tile,
-            'Glass':Glass, 'Collage':Collage, 'ImageType':Common['ImageType']}
+            'Glass':Glass, 'Collage':Collage, 'Photo':Photo, 'ImageType':Common['ImageType']}
 
 ##############################
 ## Parse and download the files
@@ -676,7 +691,7 @@ def Collage(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),
 
                 #Round corners
                 if Radius != 0:
-                    tmpfile = round_image(tmpfile,Radius,BgColor)
+                    tmpfile = round_image(tmpfile,Radius,BgColor)	
 
                 background.paste(tmpfile,(posx+(imagex-canvasx)//2,
                                           posy+(imagey-canvasy)//2), mask)
@@ -684,6 +699,54 @@ def Collage(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),
     # darken the result
     if FinalOpacity<100:
         background=Image.blend(colorbg,background,FinalOpacity/100.0)
+
+    return background
+
+##############################
+## Photo
+##############################
+def Photo(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=250,AlbumNumber=20,
+         FinalOpacity=30,ImageType='png',BgColor=0,Radius=0):
+    """ produce a random scattering of album covers """
+
+    imagex,imagey=ImageSize
+    canvasx,canvasy=CanvasSize
+
+    offsetx=(imagex-canvasx)//2
+    offsety=(imagey-canvasy)//2
+
+    Profile['Limit']=AlbumNumber+len(Profile['ExcludedList'])+5
+
+    # download images
+    filelist=getAlbumCovers(**Profile)
+
+    #background=Image.new('RGB',(imagex,imagey),0) #original code
+    background=getBG(ImageSize,ImageType,BgColor) #colour modification
+
+    for i in range(0,AlbumNumber):
+        imfile=filelist.pop() # assumes there are enough albums in the filelist
+        tmpfile=Image.open(imfile).convert('RGBA')
+        tmpfile=tmpfile.resize((AlbumSize,AlbumSize),1)
+        posx=random.randint(0,canvasx-AlbumSize)
+        posy=random.randint(0,canvasy-AlbumSize)
+
+        #Round corners
+        if Radius != 0:
+            tmpfile = round_image(tmpfile,Radius,BgColor)
+
+	#Random rotation up to 45 degrees left or right
+	angle = int(random.gauss(0,15))
+	
+	tmpfile = tmpfile.rotate(angle,resample=Image.BICUBIC,expand=1)
+	
+        background.paste(tmpfile,(posx+offsetx,posy+offsety),tmpfile)
+
+    # darken the result
+
+    #background=background.point(lambda i: FinalOpacity*i/100) #original
+    if FinalOpacity<100:
+        background=Image.blend(getBG(ImageSize,ImageType,BgColor), background,
+                               FinalOpacity/100.0)
 
     return background
 
@@ -726,6 +789,10 @@ def main():
         for k,v in param['Collage'].items():
             print("    "+k+": "+str(v))
         image=Collage(param['Profile'],**param['Collage'])
+    elif param['Mode']=='photo':
+        for k,v in param['Photo'].items():
+            print("    "+k+": "+str(v))
+        image=Photo(param['Profile'],**param['Photo'])
     else:
         print(" I don't know this mode: ", param['Mode'])
         sys.exit()
