@@ -88,8 +88,6 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageChops
 
-import math 
-
 def usage():
     print("Quick examples")
     print("--------------")
@@ -221,12 +219,15 @@ def getParameters():
         print(str(err))
         print("#"*20)
         usage()
+        
     if len(optlist)==0:
         usage()
+        
     for option, value in optlist:
         if option in ('-h','--help'):
             usage()
-        elif option in ('-m','--Mode'):     # m: mode; Tile, Glass, Collage, Photo
+            
+        elif option in ('-m','--Mode'):     # m: mode; Tile, Glass, Collage or Photo
             mode=value.lower()
 
         elif option in('-e','--Cache'):     # e: cache
@@ -285,7 +286,7 @@ def getParameters():
         elif option in ('-n','--AlbumNumber'): # n: number of albums (Glass, Collage, Photo)
             Glass['AlbumNumber']=int(value)
             Collage['AlbumNumber']=int(value)
-	    Photo['AlbumNumber']=int(value)
+	        Photo['AlbumNumber']=int(value)
 
         elif option in ('-s','--Interspace'):  # s: interspace (Tile)
             Tile['Interspace']=int(value)
@@ -691,7 +692,7 @@ def Collage(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),
 
                 #Round corners
                 if Radius != 0:
-                    tmpfile = round_image(tmpfile,Radius,BgColor)	
+                    tmpfile = round_image(tmpfile,Radius,BgColor)
 
                 background.paste(tmpfile,(posx+(imagex-canvasx)//2,
                                           posy+(imagey-canvasy)//2), mask)
