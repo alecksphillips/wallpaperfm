@@ -272,7 +272,7 @@ def getParameters():
         elif option in ('-a','--AlbumSize'): # a: album size (Collage, Tile, Photo)
             Collage['AlbumSize']=int(value)
             Tile['AlbumSize']=int(value)
-        Photo['AlbumSize']=int(value)
+            Photo['AlbumSize']=int(value)
 
         elif option in ('-o','--AlbumOpacity'):    # o: album opacity (Collage)
             Collage['AlbumOpacity']=int(value)
@@ -740,7 +740,7 @@ def Photo(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=250,Alb
     
     tmpfile = tmpfile.rotate(angle,resample=Image.BICUBIC,expand=1)
     
-        background.paste(tmpfile,(posx+offsetx,posy+offsety),tmpfile)
+    background.paste(tmpfile,(posx+offsetx,posy+offsety),tmpfile)
 
     # darken the result
 
