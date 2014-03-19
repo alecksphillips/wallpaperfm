@@ -88,8 +88,6 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageChops
 
-import math 
-
 def usage():
     print("Quick examples")
     print("--------------")
@@ -221,12 +219,15 @@ def getParameters():
         print(str(err))
         print("#"*20)
         usage()
+        
     if len(optlist)==0:
         usage()
+        
     for option, value in optlist:
         if option in ('-h','--help'):
             usage()
-        elif option in ('-m','--Mode'):     # m: mode; Tile, Glass, Collage, Photo
+            
+        elif option in ('-m','--Mode'):     # m: mode; Tile, Glass, Collage or Photo
             mode=value.lower()
 
         elif option in('-e','--Cache'):     # e: cache
