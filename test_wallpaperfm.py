@@ -150,6 +150,17 @@ class TestSequenceFunctions(unittest.TestCase):
 
         # Act/Assert
         self.helper_run_and_assert_file(args, outfile)
+        
+    def test_photo_albums(self):
+        """ Test photo albums """
+        # Arrange
+        outfile = "out_photo"
+        args = (
+            " -m photo --AlbumSize 200  --AlbumNumber 60"
+            )
+
+        # Act/Assert
+        self.helper_run_and_assert_file(args, outfile)
 
     def test_tiled_artists(self):
         """ Test tiled artists """

@@ -203,7 +203,7 @@ def getParameters():
     # Photo
     Photo=dict()
     Photo['AlbumNumber']=10
-    Photo['AlbumSize']=130
+    Photo['AlbumSize']=250
 
     try:
         optlist, args=getopt(sys.argv[1:], 'hu:t:n:c:f:a:o:g:O:i:m:p:s:e:d:r:x:lAT:C:R:',
@@ -706,8 +706,8 @@ def Collage(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),
 ##############################
 ## Photo
 ##############################
-def Photo(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=250,AlbumNumber=20,
-         FinalOpacity=30,ImageType='png',BgColor=0,Radius=0):
+def Photo(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=250,AlbumNumber=10,
+         FinalOpacity=30,ImageType='png',BgColor=0,Radius=20):
     """ produce a random scattering of album covers """
 
     imagex,imagey=ImageSize
@@ -724,7 +724,7 @@ def Photo(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=250,Alb
     #background=Image.new('RGB',(imagex,imagey),0) #original code
     background=getBG(ImageSize,ImageType,BgColor) #colour modification
 
-    for i in range(0,AlbumNumber):
+    for i in range(0,AlbumNumber-1):
         imfile=filelist.pop() # assumes there are enough albums in the filelist
         tmpfile=Image.open(imfile).convert('RGBA')
         tmpfile=tmpfile.resize((AlbumSize,AlbumSize),1)
@@ -735,12 +735,12 @@ def Photo(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=250,Alb
         if Radius != 0:
             tmpfile = round_image(tmpfile,Radius,BgColor)
 
-    #Random rotation up to 45 degrees left or right
-    angle = int(random.gauss(0,15))
-    
-    tmpfile = tmpfile.rotate(angle,resample=Image.BICUBIC,expand=1)
-    
-    background.paste(tmpfile,(posx+offsetx,posy+offsety),tmpfile)
+        #Random rotation up to 45 degrees left or right
+        angle = int(random.gauss(0,15))
+        
+        tmpfile = tmpfile.rotate(angle,resample=Image.BICUBIC,expand=1)
+        
+        background.paste(tmpfile,(posx+offsetx,posy+offsety),tmpfile)
 
     # darken the result
 
