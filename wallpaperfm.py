@@ -152,6 +152,7 @@ def usage():
     print("\nSpecific switches for the 'photo' mode (-m photo):")
     print("-a, --AlbumSize: [250] size of the albums, in pixel.")
     print("-n, --AlbumNumber: [20] number of albums to show.")
+    print("-S, --ShadowOffset: [3] distance to draw drop shadow (in pixels)")
     sys.exit()
 
 def getSize(s):
@@ -207,16 +208,17 @@ def getParameters():
     Photo=dict()
     Photo['AlbumNumber']=10
     Photo['AlbumSize']=250
+    Photo['ShadowOffset']=3
 
     try:
-        optlist, args=getopt(sys.argv[1:], 'hu:t:n:c:f:a:o:g:O:i:m:p:s:e:d:r:x:lAT:C:R:',
+        optlist, args=getopt(sys.argv[1:], 'hu:t:n:c:f:a:o:g:O:i:m:p:s:e:d:r:x:lAT:C:R:S:',
                              ["help", "Mode=", "Username=", "Past=",
                               "Filename=","CanvasSize=", "ImageSize=",
                               "FinalOpacity=","AlbumSize=","AlbumOpacity=",
                               "GradientSize=","Passes=","AlbumNumber=",
                               "Interspace=","Cache=","Offset=","EndPoint=",
                               "ExcludedList=","Local","Artist","ImageType=",
-                              "BackgroundColor=","Radius="])
+                              "BackgroundColor=","Radius=","ShadowOffset="])
     except Exception as err:
         print("#"*20)
         print(str(err))
@@ -299,6 +301,9 @@ def getParameters():
 
         elif option in ('-r','--Offset'):      # r: Offset (Glass)
             Glass['Offset']=int(value)
+            
+        elif option in ('-S', '--ShadowOffset'):# S: ShadowOffset (Photo)
+            Photo['ShadowOffset']=int(value)
 
 
         else:
@@ -710,7 +715,7 @@ def Collage(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),
 ## Photo
 ##############################
 def Photo(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=250,AlbumNumber=10,
-         FinalOpacity=30,ImageType='png',BgColor=0,Radius=20):
+         FinalOpacity=30,ImageType='png',BgColor=0,Radius=20,ShadowOffset=3):
     """ produce a random scattering of album covers """
 
     imagex,imagey=ImageSize
@@ -732,10 +737,7 @@ def Photo(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=250,Alb
     white = Image.open("resources/white.png").convert('RGBA').resize((AlbumSize,AlbumSize),1)
     black = Image.open("resources/black.png").convert('RGBA').resize((AlbumSize,AlbumSize),1)
     alpha = Image.open("resources/alpha.png").convert('RGBA').resize((AlbumSize+2,AlbumSize+2),1)
-    
-    shadowOffset = AlbumSize/100
-    
-    blackMask=getBG((AlbumSize,AlbumSize),'png',(128,128,128))
+    blackMask = Image.open("resources/shadowMask.png").convert('RGBA').resize((AlbumSize,AlbumSize),1)
     
     #Round corners
     if Radius !=0:
@@ -776,7 +778,7 @@ def Photo(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=250,Alb
         shadowMask = alpha2.rotate(angle,resample=Image.BICUBIC,expand=1)
         
         #Paste the shadow using mask, paste the album cover
-        background.paste(shadow, (posx+offsetx-shadowOffset,posy+offsety+shadowOffset), shadowMask)
+        background.paste(shadow, (posx+offsetx-ShadowOffset,posy+offsety+ShadowOffset), shadowMask)
         background.paste(tmpfile,(posx+offsetx,posy+offsety),tmpfile)
 
     # darken the result
