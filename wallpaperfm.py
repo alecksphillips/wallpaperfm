@@ -48,7 +48,7 @@
 # . Python Imaging Library (probably already installed, available through
 #   synaptic for Ubuntu users)
 # . for Python 3, use 'Pillow', a drop-in replacement for PIL
-# . a last.fm account and an active internet connection
+# . a last.fm account and an active internet connectionopengl python3
 #
 # v. 16 Jul 2013
 #  - Integer division no longer truncates as of Python 3.0, instead returning
@@ -87,6 +87,9 @@ import random
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageChops
+
+from PIL import ImageFilter
+from PIL import ImageOps
 
 def usage():
     print("Quick examples")
@@ -549,7 +552,7 @@ def Tile(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=130,
 
     # darken the result
 
-    #background=background.point(lambda i: FinalOpacity*i/100) #original
+    #background=background.point(laopengl python3mbda i: FinalOpacity*i/100) #original
     if FinalOpacity<100:
         background=Image.blend(getBG(ImageSize,ImageType,BgColor), background,
                                FinalOpacity/100.0)
@@ -723,6 +726,28 @@ def Photo(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=250,Alb
 
     #background=Image.new('RGB',(imagex,imagey),0) #original code
     background=getBG(ImageSize,ImageType,BgColor) #colour modification
+    
+    #Load image resources
+    mask = Image.open("resources/mask.png").convert('RGBA').resize((AlbumSize,AlbumSize),1)
+    white = Image.open("resources/white.png").convert('RGBA').resize((AlbumSize,AlbumSize),1)
+    black = Image.open("resources/black.png").convert('RGBA').resize((AlbumSize,AlbumSize),1)
+    alpha = Image.open("resources/alpha.png").convert('RGBA').resize((AlbumSize+2,AlbumSize+2),1)
+    
+    shadowOffset = AlbumSize/100
+    
+    blackMask=getBG((AlbumSize,AlbumSize),'png',(128,128,128))
+    
+    #Round corners
+    if Radius !=0:
+        black = round_image(black,Radius,BgColor)
+        blackMask = round_image(blackMask,Radius,BgColor)
+        alpha = round_image(alpha,Radius+1,BgColor)
+
+    #Include 1 pixel border of alpha to reduce jaggys when rotating
+    alpha1 = alpha.copy()
+    alpha2 = alpha.copy()
+    alpha1.paste(black, (1,1), black)
+    alpha2.paste(blackMask, (1,1), blackMask)
 
     for i in range(0,AlbumNumber-1):
         imfile=filelist.pop() # assumes there are enough albums in the filelist
@@ -730,16 +755,28 @@ def Photo(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=250,Alb
         tmpfile=tmpfile.resize((AlbumSize,AlbumSize),1)
         posx=random.randint(0,canvasx-AlbumSize)
         posy=random.randint(0,canvasy-AlbumSize)
+        
+        #Add highlight for depth
+        tmpfile.paste(white,(0,0),mask)
 
         #Round corners
         if Radius != 0:
             tmpfile = round_image(tmpfile,Radius,BgColor)
-
+        
         #Random rotation up to 45 degrees left or right
         angle = int(random.gauss(0,15))
         
-        tmpfile = tmpfile.rotate(angle,resample=Image.BICUBIC,expand=1)
+        #Jaggy reduction again
+        alpha3=alpha.copy()
+        alpha3.paste(tmpfile, (1,1), tmpfile)
         
+        #Rotate the album, the shadow and the mask for the shadow
+        tmpfile = alpha3.rotate(angle,resample=Image.BICUBIC,expand=1)
+        shadow = alpha1.rotate(angle,resample=Image.BICUBIC,expand=1)
+        shadowMask = alpha2.rotate(angle,resample=Image.BICUBIC,expand=1)
+        
+        #Paste the shadow using mask, paste the album cover
+        background.paste(shadow, (posx+offsetx-shadowOffset,posy+offsety+shadowOffset), shadowMask)
         background.paste(tmpfile,(posx+offsetx,posy+offsety),tmpfile)
 
     # darken the result
