@@ -6,6 +6,8 @@ python:
 - '3.3'
 - '3.4'
 - 'pypy'
+before_install:
+- if [[ $TRAVIS_PYTHON_VERSION == 'pypy' ]]; then sudo apt-get install python-tk; fi
 install:
 - pip install -r requirements.txt
 - pip install coveralls
