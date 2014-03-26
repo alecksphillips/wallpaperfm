@@ -4,6 +4,8 @@ python:
 - '2.7'
 - '3.2'
 - '3.3'
+- '3.4'
+- 'pypy'
 install:
 - pip install -r requirements.txt
 - pip install coveralls
@@ -12,3 +14,8 @@ script:
 - ./test_wallpaperfm.py
 after_success:
   coveralls
+
+matrix:
+  allow_failures:
+    - python: '3.4'
+    - python: 'pypy'
