@@ -19,4 +19,3 @@ after_success:
 
 matrix:
   allow_failures:
-    - python: '3.4'
