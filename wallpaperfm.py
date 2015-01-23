@@ -111,7 +111,7 @@ def usage():
     print("-f, --Filename: the filename where the image will be saved. "
           "Username by default.")
     print("-t, --Past: [overall] how far back should the profile go.")
-    print("        One of 3month, 6month, 12month or overall.")
+    print("        One of 7day, 1month, 3month, 6month, 12month or overall.")
     print("-O, --FinalOpacity: [80] darkness of the final image. from 0 to 100")
     print("-C, --BackgroundColor: [#000000] background color ('#' must be "
                 "escaped)")
@@ -248,7 +248,7 @@ def getParameters():
             Profile['Username']=value
 
         elif option in ('-t','--Past'):     # t: how far back (Common),
-            Profile['Past']=value           #either 3month,6month or 12month
+            Profile['Past']=value           #either overall, 7day, 1month, 3month, 6month or 12month
 
         elif option in ('-x','--ExcludedList'):            # x: excluded url
             Profile['ExcludedList'].extend(value.rsplit(','))
@@ -359,8 +359,8 @@ def getAlbumCovers(Username='Koant',Past='overall',cache='wp_cache',
                    Limit=50,Local='no',Artist='no'):
     """ download album covers if necessary """
     ## Preparing the file list.
-    if Past in ('3month','6month','12month'):
-        tpe='&type='+Past
+    if Past in ('overall','7day','1month','3month','6month','12month'):
+        tpe='&period='+Past
     else:
         tpe=''
 
