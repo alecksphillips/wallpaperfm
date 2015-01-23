@@ -48,7 +48,7 @@
 # . Python Imaging Library (probably already installed, available through
 #   synaptic for Ubuntu users)
 # . for Python 3, use 'Pillow', a drop-in replacement for PIL
-# . a last.fm account and an active internet connection
+# . a last.fm account and an active internet connectionopengl python3
 #
 # v. 16 Jul 2013
 #  - Integer division no longer truncates as of Python 3.0, instead returning
@@ -88,6 +88,9 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageChops
 
+from PIL import ImageFilter
+from PIL import ImageOps
+
 def usage():
     print("Quick examples")
     print("--------------")
@@ -99,6 +102,8 @@ def usage():
           " effect.\n")
     print("./wallpaperfm.py -m collage -u your_lastfm_username")
     print("    will generate a random collage of your favorite albums.\n")
+    print("./wallpaperfm.py -m photo -u your_lastfm_username")
+    print("    will generate a random scattering of your favorite albums.\n")
     print("--------------")
 
     print("\nGlobal switches:")
@@ -106,7 +111,7 @@ def usage():
     print("-f, --Filename: the filename where the image will be saved. "
           "Username by default.")
     print("-t, --Past: [overall] how far back should the profile go.")
-    print("        One of 3month, 6month, 12month or overall.")
+    print("        One of 7day, 1month, 3month, 6month, 12month or overall.")
     print("-O, --FinalOpacity: [80] darkness of the final image. from 0 to 100")
     print("-C, --BackgroundColor: [#000000] background color ('#' must be "
                 "escaped)")
@@ -137,13 +142,17 @@ def usage():
     print("-r, --Offset: [40] starting value of opacity for the shadow.")
 
     print("\nSpecific switches for the 'collage' mode (-m collage):")
-    print("-a, --AlbumSize: [250] size of the albums, in pixel.")
+    print("-a, --AlbumSize: [300] size of the albums, in pixel.")
     print("-o, --AlbumOpacity: [90] maximum opacity of each album, from 0 to "
                 "100.")
     print("-n, --AlbumNumber: [50] number of albums to show.")
     print("-g, --GradientSize: [15] portion of the album in the gradient, "
                 "from 0 to 100")
     print("-p, --Passes: [4] number of iterations of the algorithms.")
+    print("\nSpecific switches for the 'photo' mode (-m photo):")
+    print("-a, --AlbumSize: [250] size of the albums, in pixel.")
+    print("-n, --AlbumNumber: [20] number of albums to show.")
+    print("-S, --ShadowOffset: [3] distance to draw drop shadow (in pixels)")
     sys.exit()
 
 def getSize(s):
@@ -195,26 +204,35 @@ def getParameters():
     Glass['Offset']=40
     Glass['EndPoint']=75
 
+    # Photo
+    Photo=dict()
+    Photo['AlbumNumber']=10
+    Photo['AlbumSize']=250
+    Photo['ShadowOffset']=3
+
     try:
-        optlist, args=getopt(sys.argv[1:], 'hu:t:n:c:f:a:o:g:O:i:m:p:s:e:d:r:x:lAT:C:R:',
+        optlist, args=getopt(sys.argv[1:], 'hu:t:n:c:f:a:o:g:O:i:m:p:s:e:d:r:x:lAT:C:R:S:',
                              ["help", "Mode=", "Username=", "Past=",
                               "Filename=","CanvasSize=", "ImageSize=",
                               "FinalOpacity=","AlbumSize=","AlbumOpacity=",
                               "GradientSize=","Passes=","AlbumNumber=",
                               "Interspace=","Cache=","Offset=","EndPoint=",
                               "ExcludedList=","Local","Artist","ImageType=",
-                              "BackgroundColor=","Radius="])
+                              "BackgroundColor=","Radius=","ShadowOffset="])
     except Exception as err:
         print("#"*20)
         print(str(err))
         print("#"*20)
         usage()
+        
     if len(optlist)==0:
         usage()
+        
     for option, value in optlist:
         if option in ('-h','--help'):
             usage()
-        elif option in ('-m','--Mode'):     # m: mode; Tile, Glass or Collage
+            
+        elif option in ('-m','--Mode'):     # m: mode; Tile, Glass, Collage or Photo
             mode=value.lower()
 
         elif option in('-e','--Cache'):     # e: cache
@@ -230,7 +248,7 @@ def getParameters():
             Profile['Username']=value
 
         elif option in ('-t','--Past'):     # t: how far back (Common),
-            Profile['Past']=value           #either 3month,6month or 12month
+            Profile['Past']=value           #either overall, 7day, 1month, 3month, 6month or 12month
 
         elif option in ('-x','--ExcludedList'):            # x: excluded url
             Profile['ExcludedList'].extend(value.rsplit(','))
@@ -256,9 +274,10 @@ def getParameters():
         elif option in ('-R','--Radius'):    # R: images have rounded corners
             Common['Radius']=int(value)
 
-        elif option in ('-a','--AlbumSize'): # a: album size (Collage,Tile)
+        elif option in ('-a','--AlbumSize'): # a: album size (Collage, Tile, Photo)
             Collage['AlbumSize']=int(value)
             Tile['AlbumSize']=int(value)
+            Photo['AlbumSize']=int(value)
 
         elif option in ('-o','--AlbumOpacity'):    # o: album opacity (Collage)
             Collage['AlbumOpacity']=int(value)
@@ -269,9 +288,10 @@ def getParameters():
         elif option in ('-p','--Passes'):    # p: number of passes (Collage)
             Collage['Passes']=int(value)
 
-        elif option in ('-n','--AlbumNumber'): # n: number of albums (Glass, Collage)
+        elif option in ('-n','--AlbumNumber'): # n: number of albums (Glass, Collage, Photo)
             Glass['AlbumNumber']=int(value)
             Collage['AlbumNumber']=int(value)
+            Photo['AlbumNumber']=int(value)
 
         elif option in ('-s','--Interspace'):  # s: interspace (Tile)
             Tile['Interspace']=int(value)
@@ -281,6 +301,9 @@ def getParameters():
 
         elif option in ('-r','--Offset'):      # r: Offset (Glass)
             Glass['Offset']=int(value)
+            
+        elif option in ('-S', '--ShadowOffset'):# S: ShadowOffset (Photo)
+            Photo['ShadowOffset']=int(value)
 
 
         else:
@@ -296,9 +319,10 @@ def getParameters():
         Collage[k]=v
         Tile[k]=v
         Glass[k]=v
+        Photo[k]=v
 
     return {'Filename':Filename, 'Mode':mode, 'Profile':Profile, 'Tile':Tile,
-            'Glass':Glass, 'Collage':Collage, 'ImageType':Common['ImageType']}
+            'Glass':Glass, 'Collage':Collage, 'Photo':Photo, 'ImageType':Common['ImageType']}
 
 ##############################
 ## Parse and download the files
@@ -335,8 +359,8 @@ def getAlbumCovers(Username='Koant',Past='overall',cache='wp_cache',
                    Limit=50,Local='no',Artist='no'):
     """ download album covers if necessary """
     ## Preparing the file list.
-    if Past in ('3month','6month','12month'):
-        tpe='&type='+Past
+    if Past in ('overall','7day','1month','3month','6month','12month'):
+        tpe='&period='+Past
     else:
         tpe=''
 
@@ -533,7 +557,7 @@ def Tile(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=130,
 
     # darken the result
 
-    #background=background.point(lambda i: FinalOpacity*i/100) #original
+    #background=background.point(laopengl python3mbda i: FinalOpacity*i/100) #original
     if FinalOpacity<100:
         background=Image.blend(getBG(ImageSize,ImageType,BgColor), background,
                                FinalOpacity/100.0)
@@ -676,7 +700,7 @@ def Collage(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),
 
                 #Round corners
                 if Radius != 0:
-                    tmpfile = round_image(tmpfile,Radius,BgColor)
+                    tmpfile = round_image(tmpfile,Radius,BgColor)    
 
                 background.paste(tmpfile,(posx+(imagex-canvasx)//2,
                                           posy+(imagey-canvasy)//2), mask)
@@ -684,6 +708,85 @@ def Collage(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),
     # darken the result
     if FinalOpacity<100:
         background=Image.blend(colorbg,background,FinalOpacity/100.0)
+
+    return background
+
+##############################
+## Photo
+##############################
+def Photo(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=250,AlbumNumber=10,
+         FinalOpacity=30,ImageType='png',BgColor=0,Radius=20,ShadowOffset=3):
+    """ produce a random scattering of album covers """
+
+    imagex,imagey=ImageSize
+    canvasx,canvasy=CanvasSize
+
+    offsetx=(imagex-canvasx)//2
+    offsety=(imagey-canvasy)//2
+
+    Profile['Limit']=AlbumNumber+len(Profile['ExcludedList'])+5
+
+    # download images
+    filelist=getAlbumCovers(**Profile)
+
+    #background=Image.new('RGB',(imagex,imagey),0) #original code
+    background=getBG(ImageSize,ImageType,BgColor) #colour modification
+    
+    #Load image resources
+    mask = Image.open("resources/mask.png").convert('RGBA').resize((AlbumSize,AlbumSize),1)
+    white = Image.open("resources/white.png").convert('RGBA').resize((AlbumSize,AlbumSize),1)
+    black = Image.open("resources/black.png").convert('RGBA').resize((AlbumSize,AlbumSize),1)
+    alpha = Image.open("resources/alpha.png").convert('RGBA').resize((AlbumSize+2,AlbumSize+2),1)
+    blackMask = Image.open("resources/shadowMask.png").convert('RGBA').resize((AlbumSize,AlbumSize),1)
+    
+    #Round corners
+    if Radius !=0:
+        black = round_image(black,Radius,BgColor)
+        blackMask = round_image(blackMask,Radius,BgColor)
+        alpha = round_image(alpha,Radius+1,BgColor)
+
+    #Include 1 pixel border of alpha to reduce jaggys when rotating
+    alpha1 = alpha.copy()
+    alpha2 = alpha.copy()
+    alpha1.paste(black, (1,1), black)
+    alpha2.paste(blackMask, (1,1), blackMask)
+
+    for i in range(0,AlbumNumber-1):
+        imfile=filelist.pop() # assumes there are enough albums in the filelist
+        tmpfile=Image.open(imfile).convert('RGBA')
+        tmpfile=tmpfile.resize((AlbumSize,AlbumSize),1)
+        posx=random.randint(0,canvasx-AlbumSize)
+        posy=random.randint(0,canvasy-AlbumSize)
+        
+        #Add highlight for depth
+        tmpfile.paste(white,(0,0),mask)
+
+        #Round corners
+        if Radius != 0:
+            tmpfile = round_image(tmpfile,Radius,BgColor)
+        
+        #Random rotation up to 45 degrees left or right
+        angle = int(random.gauss(0,15))
+        
+        #Jaggy reduction again
+        alpha3=alpha.copy()
+        alpha3.paste(tmpfile, (1,1), tmpfile)
+        
+        #Rotate the album, the shadow and the mask for the shadow
+        tmpfile = alpha3.rotate(angle,resample=Image.BICUBIC,expand=1)
+        shadow = alpha1.rotate(angle,resample=Image.BICUBIC,expand=1)
+        shadowMask = alpha2.rotate(angle,resample=Image.BICUBIC,expand=1)
+        
+        #Paste the shadow using mask, paste the album cover
+        background.paste(shadow, (posx+offsetx-ShadowOffset,posy+offsety+ShadowOffset), shadowMask)
+        background.paste(tmpfile,(posx+offsetx,posy+offsety),tmpfile)
+
+    # darken the result
+
+    #background=background.point(lambda i: FinalOpacity*i/100) #original
+    if FinalOpacity<100:
+        background=Image.blend(getBG(ImageSize,ImageType,BgColor), background,
+                               FinalOpacity/100.0)
 
     return background
 
@@ -726,6 +829,10 @@ def main():
         for k,v in param['Collage'].items():
             print("    "+k+": "+str(v))
         image=Collage(param['Profile'],**param['Collage'])
+    elif param['Mode']=='photo':
+        for k,v in param['Photo'].items():
+            print("    "+k+": "+str(v))
+        image=Photo(param['Profile'],**param['Photo'])
     else:
         print(" I don't know this mode: ", param['Mode'])
         sys.exit()

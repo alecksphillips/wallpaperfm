@@ -58,3 +58,6 @@ docs/_build/
 wpcache/
 my_cache/
 todo.txt
+
+#DO include contents of resources folder
+!resources/*
