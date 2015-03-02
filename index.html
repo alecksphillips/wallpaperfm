@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Wallpaperfm by alecksphillips</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Wallpaperfm</h1>
+        <p>Python script for generating wallpapers from last.fm data</p>
+
+        <p class="view"><a href="https://github.com/alecksphillips/wallpaperfm">View the Project on GitHub <small>alecksphillips/wallpaperfm</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/alecksphillips/wallpaperfm/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/alecksphillips/wallpaperfm/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/alecksphillips/wallpaperfm">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="wallpaperfm" class="anchor" href="#wallpaperfm" aria-hidden="true"><span class="octicon octicon-link"></span></a>wallpaperfm</h1>
+
+<p><a href="https://travis-ci.org/alecksphillips/wallpaperfm?branch=master"><img src="https://travis-ci.org/alecksphillips/wallpaperfm.png?branch=dev" alt="Build Status"></a> <a href="https://coveralls.io/r/alecksphillips/wallpaperfm?branch=master"><img src="https://coveralls.io/repos/alecksphillips/wallpaperfm/badge.png?branch=dev" alt="Coverage Status"></a></p>
+
+<p>Python script for generating wallpapers from Last.fm data.</p>
+
+<p>Copyright (C) 2014  Alex Phillips (Email: <a href="mailto:alecks.phillips@gmail.com">alecks.phillips@gmail.com</a>)</p>
+
+<p>./wallpaper.py will display the instructions.</p>
+
+<p>Please try to use the local option '-l' when possible to be kind to Last.fm's servers.</p>
+
+<h2>
+<a id="gpl" class="anchor" href="#gpl" aria-hidden="true"><span class="octicon octicon-link"></span></a>GPL</h2>
+
+<p>This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</p>
+
+<p>See <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a> for more information</p>
+
+<h2>
+<a id="changes-to-original-script" class="anchor" href="#changes-to-original-script" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changes to original script</h2>
+
+<ul>
+<li>Background Color (--BackgroundColor)</li>
+<li>Image Type (--ImageType)</li>
+<li>Use artist images instead of album covers (--Artist)</li>
+<li>Rounding of image corners (--Radius)</li>
+<li>Adapted for Python 3</li>
+<li>Updated for Last.fm API 2.0</li>
+</ul>
+
+<h2>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements:</h2>
+
+<ul>
+<li>Tested on Python 2.6, 2.7, 3.2 or 3.3</li>
+<li>Python Imaging Library (not available for Python 3; 'Pillow' is a drop-in replacement)</li>
+<li>A Last.fm account and an active internet connection</li>
+<li>Last.fm API account (available for free <a href="http://www.last.fm/api/account/create" title="here">here</a>)</li>
+</ul>
+
+<h2>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install:</h2>
+
+<p><code>pip install -r requirements.txt</code></p>
+
+<h2>
+<a id="album-of-examples" class="anchor" href="#album-of-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Album of Examples:</h2>
+
+<p><a href="http://imgur.com/a/Utr4W" title="Imgur">Imgur</a> - each captioned with the options required to generate that example.</p>
+
+<h2>
+<a id="v-16-jul-2013" class="anchor" href="#v-16-jul-2013" aria-hidden="true"><span class="octicon octicon-link"></span></a>v. 16 Jul 2013</h2>
+
+<ul>
+<li>Consolidated <a href="http://www.lastfm.fr/user/Roignac" title="Roignac">Roignac</a> and <a href="http://www.lastfm.fr/user/HelgeBS" title="HelgeBS">HelgeBS</a>'s changes into one script</li>
+<li>Integer division no longer truncates as of Python 3.0, instead returning
+a float. Changed all instances of '/' used for integer division to '//',
+the floor division operator to better preserve functionality.</li>
+<li>Lots of formatting to try to conform to the Python Style Guide</li>
+</ul>
+
+<h2>
+<a id="v-19-jul-2013" class="anchor" href="#v-19-jul-2013" aria-hidden="true"><span class="octicon octicon-link"></span></a>v. 19 Jul 2013</h2>
+
+<ul>
+<li>Updated for Last.fm API 2.0 (user can use their own API account)</li>
+<li>Fixed artist option</li>
+</ul>
+
+<h2>
+<a id="v-08-feb-2014" class="anchor" href="#v-08-feb-2014" aria-hidden="true"><span class="octicon octicon-link"></span></a>v. 08 Feb 2014</h2>
+
+<ul>
+<li>Fixed gradient on albums in Collage not being applied on left and right borders.</li>
+</ul>
+
+<h2>
+<a id="acknowledgements" class="anchor" href="#acknowledgements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Acknowledgements</h2>
+
+<p>Thanks to <a href="http://www.lastfm.fr/user/Koant" title="Koant">Koant</a> for his <a href="http://ledazibao.free.fr/wallpaperfm/index.php" title="original script">original script</a> and to
+<a href="http://www.lastfm.fr/user/HelgeBS" title="HelgeBS">HelgeBS</a> for the addition of the background color and image type <a href="https://content.wuala.com/contents/nanyouco/Images/last.fm/wallpaperfm.py?key=4DCLgHGLNI32" title="options">options</a>,
+and to <a href="http://www.lastfm.fr/user/Roignac" title="Roignac">Roignac</a> for the artist image and rounded corners <a href="http://bazaar.launchpad.net/%7Eroignac/+junk/wallpaperfm/files" title="options">options</a>.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/alecksphillips">alecksphillips</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
