@@ -732,12 +732,14 @@ def Photo(Profile,ImageSize=(1280,1024),CanvasSize=(1280,1024),AlbumSize=250,Alb
     #background=Image.new('RGB',(imagex,imagey),0) #original code
     background=getBG(ImageSize,ImageType,BgColor) #colour modification
     
+    resourcesPath = os.path.join(os.path.dirname(__file__), 'resources')
+    
     #Load image resources
-    mask = Image.open("resources/mask.png").convert('RGBA').resize((AlbumSize,AlbumSize),1)
-    white = Image.open("resources/white.png").convert('RGBA').resize((AlbumSize,AlbumSize),1)
-    black = Image.open("resources/black.png").convert('RGBA').resize((AlbumSize,AlbumSize),1)
-    alpha = Image.open("resources/alpha.png").convert('RGBA').resize((AlbumSize+2,AlbumSize+2),1)
-    blackMask = Image.open("resources/shadowMask.png").convert('RGBA').resize((AlbumSize,AlbumSize),1)
+    mask = Image.open(os.path.join(resourcesPath,"mask.png")).convert('RGBA').resize((AlbumSize,AlbumSize),1)
+    white = Image.open(os.path.join(resourcesPath,"white.png")).convert('RGBA').resize((AlbumSize,AlbumSize),1)
+    black = Image.open(os.path.join(resourcesPath,"black.png")).convert('RGBA').resize((AlbumSize,AlbumSize),1)
+    alpha = Image.open(os.path.join(resourcesPath,"alpha.png")).convert('RGBA').resize((AlbumSize+2,AlbumSize+2),1)
+    blackMask = Image.open(os.path.join(resourcesPath,"shadowMask.png")).convert('RGBA').resize((AlbumSize,AlbumSize),1)
     
     #Round corners
     if Radius !=0:
